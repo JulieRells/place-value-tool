@@ -6,7 +6,6 @@
 <title>Place Value Playground</title>
 
 <style>
-
 body{
     font-family:'Segoe UI',sans-serif;
     text-align:center;
@@ -28,23 +27,22 @@ body{
     font-size:2.8rem;
     font-weight:bold;
     color:#2b6cb0;
-    margin-bottom:15px;
 }
 
-/* ========================= */
-/* SUPPLY DOCK */
-/* ========================= */
+/* Expanded form */
+.expanded-box{
+    margin-top:10px;
+    font-size:1.2rem;
+    color:#4a5568;
+}
 
+/* Supply Dock */
 .supply-dock{
     display:flex;
     justify-content:center;
-    align-items:flex-start;
     gap:80px;
-    flex-wrap:nowrap;
-
-    margin:25px auto;
+    margin:25px 0;
     padding:20px;
-
     background:#edf2f7;
     border:2px solid #e2e8f0;
     border-radius:14px;
@@ -54,19 +52,11 @@ body{
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
-
-    min-width:100px;
     gap:10px;
-
     font-weight:bold;
-    color:#2d3748;
 }
 
-/* ========================= */
-/* GRID */
-/* ========================= */
-
+/* Grid */
 .grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -79,23 +69,14 @@ body{
     border-radius:12px;
     padding:12px;
     min-height:260px;
-
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
-.hundreds{
-    background:#fefcbf;
-}
-
-.tens{
-    background:#feebc8;
-}
-
-.ones{
-    background:#c6f6d5;
-}
+.hundreds{background:#fefcbf;}
+.tens{background:#feebc8;}
+.ones{background:#c6f6d5;}
 
 .label{
     font-size:1.2rem;
@@ -103,124 +84,59 @@ body{
     margin-bottom:10px;
 }
 
-/* ========================= */
-/* DROP ZONES */
-/* ========================= */
-
 .drop-zone{
     width:100%;
     min-height:180px;
-
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    align-content:flex-start;
     gap:8px;
 }
 
-/* ========================= */
-/* BASE 10 BLOCKS */
-/* ========================= */
-
-/* HUNDREDS */
-
+/* Blocks */
 .flat{
-    width:55px;
-    height:55px;
-
-    background-color:#ecc94b;
+    width:55px;height:55px;
+    background:#ecc94b;
     border:2px solid #b7791f;
-    border-radius:4px;
-
     background-image:
         linear-gradient(to right, rgba(0,0,0,0.25) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0,0,0,0.25) 1px, transparent 1px);
-
     background-size:5px 5px;
-
     cursor:grab;
-    flex-shrink:0;
 }
-
-/* TENS */
 
 .rod{
-    width:16px;
-    height:70px;
-
-    background-color:#ed8936;
+    width:16px;height:70px;
+    background:#ed8936;
     border:2px solid #c05621;
-    border-radius:3px;
-
     background-image:
         linear-gradient(to bottom, rgba(0,0,0,0.35) 1px, transparent 1px);
-
     background-size:100% 7px;
-
     cursor:grab;
-    flex-shrink:0;
 }
-
-/* ONES */
 
 .unit{
-    width:16px;
-    height:16px;
-
-    background-color:#48bb78;
+    width:16px;height:16px;
+    background:#48bb78;
     border:2px solid #2f855a;
-    border-radius:3px;
-
     cursor:grab;
-    flex-shrink:0;
 }
 
-/* ========================= */
-/* FEEDBACK */
-/* ========================= */
-
-.error-highlight{
-    outline:4px solid #e53e3e;
-}
-
-.correct-highlight{
-    outline:4px solid #38a169;
-}
-
-.feedback{
-    margin-top:18px;
-    font-weight:bold;
-    font-size:1.1rem;
-}
-
-/* ========================= */
-/* BUTTONS */
-/* ========================= */
+/* Feedback */
+.error-highlight{outline:4px solid #e53e3e;}
+.correct-highlight{outline:4px solid #38a169;}
 
 button{
     padding:10px 20px;
     margin:6px;
     font-weight:bold;
     cursor:pointer;
-    border:none;
-    border-radius:8px;
 }
 
-.check-btn{
-    background:#4299e1;
-    color:white;
+.feedback{
+    margin-top:15px;
+    font-weight:bold;
 }
-
-.clear-btn{
-    background:#a0aec0;
-    color:white;
-}
-
-.next-btn{
-    background:#38a169;
-    color:white;
-}
-
 </style>
 </head>
 
@@ -231,87 +147,52 @@ button{
 <h1>Place Value Playground</h1>
 
 <p id="modeIndicator"></p>
-
-<p><strong>Problem <span id="problemNumber">1</span> of 10</strong></p>
+<p><strong>Problem <span id="problemNumber">1</span> of 6</strong></p>
 
 <div class="target-box" id="targetNumber">---</div>
 
-<!-- SUPPLY DOCK -->
+<!-- Expanded form -->
+<div class="expanded-box" id="expandedForm"></div>
 
+<!-- Supply Dock -->
 <div class="supply-dock">
-
     <div class="dock-item">
-        <div class="flat"
-             draggable="true"
-             ondragstart="drag(event,'hundred')"></div>
+        <div class="flat" draggable="true" ondragstart="drag(event,'hundred')"></div>
         <span>Hundreds</span>
     </div>
-
     <div class="dock-item">
-        <div class="rod"
-             draggable="true"
-             ondragstart="drag(event,'ten')"></div>
+        <div class="rod" draggable="true" ondragstart="drag(event,'ten')"></div>
         <span>Tens</span>
     </div>
-
     <div class="dock-item">
-        <div class="unit"
-             draggable="true"
-             ondragstart="drag(event,'one')"></div>
+        <div class="unit" draggable="true" ondragstart="drag(event,'one')"></div>
         <span>Ones</span>
     </div>
-
 </div>
 
-<!-- ANSWER COLUMNS -->
-
+<!-- Columns -->
 <div class="grid">
-
-    <div class="column hundreds"
-         ondragover="allowDrop(event)"
-         ondrop="drop(event,'hundreds')">
-
+    <div class="column hundreds" ondragover="allowDrop(event)" ondrop="drop(event,'hundreds')">
         <div class="label">Hundreds</div>
-
         <div class="drop-zone" id="zoneHundreds"></div>
-
     </div>
-
-    <div class="column tens"
-         ondragover="allowDrop(event)"
-         ondrop="drop(event,'tens')">
-
+    <div class="column tens" ondragover="allowDrop(event)" ondrop="drop(event,'tens')">
         <div class="label">Tens</div>
-
         <div class="drop-zone" id="zoneTens"></div>
-
     </div>
-
-    <div class="column ones"
-         ondragover="allowDrop(event)"
-         ondrop="drop(event,'ones')">
-
+    <div class="column ones" ondragover="allowDrop(event)" ondrop="drop(event,'ones')">
         <div class="label">Ones</div>
-
         <div class="drop-zone" id="zoneOnes"></div>
-
     </div>
-
 </div>
 
-<button class="check-btn" onclick="checkAnswer()">Check</button>
-
-<button class="clear-btn" onclick="clearWorkspace()">Clear</button>
+<button onclick="checkAnswer()">Check</button>
+<button onclick="clearWorkspace()">Clear</button>
 
 <br>
 
-<button id="nextSlideBtn"
-        class="next-btn"
-        style="display:none;"
-        onclick="goToNextSlide()">
-
+<button id="nextSlideBtn" style="display:none;" onclick="goToNextSlide()">
 👉 Return to Nearpod
-
 </button>
 
 <div class="feedback" id="feedback"></div>
@@ -325,26 +206,20 @@ let targetH,targetT,targetO;
 let currentH=0,currentT=0,currentO=0;
 
 let problemCount=0;
-const maxProblems=10;
+const maxProblems=6;
 
-/* GENERATE */
-
+/* Generate */
 function generateNumber(){
 
     if(problemCount>=maxProblems){
-
         document.getElementById('targetNumber').innerText="Done!";
-
         document.getElementById('feedback').innerText=
         "🎉 Great work! Click below to return to Nearpod.";
-
         document.getElementById('nextSlideBtn').style.display="inline-block";
-
         return;
     }
 
     problemCount++;
-
     document.getElementById('problemNumber').innerText=problemCount;
 
     currentNumber=Math.floor(Math.random()*900)+100;
@@ -355,22 +230,23 @@ function generateNumber(){
 
     document.getElementById('targetNumber').innerText=currentNumber;
 
+    /* Expanded form */
+    document.getElementById('expandedForm').innerText =
+        `${targetH*100} + ${targetT*10} + ${targetO}`;
+
     clearWorkspace();
     updateMode();
 }
 
-/* MODE */
-
+/* Mode */
 function updateMode(){
-
-    document.getElementById('modeIndicator').innerText=
-        problemCount<=5
+    document.getElementById('modeIndicator').innerText =
+        problemCount<=3
         ? "Guided Mode: Place blocks in the correct column"
         : "Challenge Mode: Blocks can go anywhere!";
 }
 
-/* DRAG */
-
+/* Drag */
 function drag(ev,type){
     ev.dataTransfer.setData("text",type);
 }
@@ -379,18 +255,14 @@ function allowDrop(ev){
     ev.preventDefault();
 }
 
-/* DROP */
-
+/* Drop */
 function drop(ev,column){
-
     ev.preventDefault();
 
     let type=ev.dataTransfer.getData("text");
-
-    let guided=problemCount<=5;
+    let guided=problemCount<=3;
 
     if(guided){
-
         if(column==="hundreds" && type!=="hundred") return;
         if(column==="tens" && type!=="ten") return;
         if(column==="ones" && type!=="one") return;
@@ -399,71 +271,48 @@ function drop(ev,column){
     addBlock(column);
 }
 
-/* ADD BLOCK */
-
+/* Add */
 function addBlock(column){
 
     let div=document.createElement("div");
 
     if(column==="hundreds"){
-
-        currentH++;
-        div.className="flat";
-        document.getElementById("zoneHundreds").appendChild(div);
+        currentH++; div.className="flat";
+        zoneHundreds.appendChild(div);
     }
-
     if(column==="tens"){
-
-        currentT++;
-        div.className="rod";
-        document.getElementById("zoneTens").appendChild(div);
+        currentT++; div.className="rod";
+        zoneTens.appendChild(div);
     }
-
     if(column==="ones"){
-
-        currentO++;
-        div.className="unit";
-        document.getElementById("zoneOnes").appendChild(div);
+        currentO++; div.className="unit";
+        zoneOnes.appendChild(div);
     }
 
     div.onclick=function(){
-
         this.remove();
-
         if(column==="hundreds") currentH--;
         if(column==="tens") currentT--;
         if(column==="ones") currentO--;
     };
 }
 
-/* CLEAR */
-
+/* Clear */
 function clearWorkspace(){
+    currentH=0; currentT=0; currentO=0;
+    zoneHundreds.innerHTML="";
+    zoneTens.innerHTML="";
+    zoneOnes.innerHTML="";
 
-    currentH=0;
-    currentT=0;
-    currentO=0;
-
-    document.getElementById("zoneHundreds").innerHTML="";
-    document.getElementById("zoneTens").innerHTML="";
-    document.getElementById("zoneOnes").innerHTML="";
-
-    document.querySelector('.hundreds')
-        .classList.remove('error-highlight','correct-highlight');
-
-    document.querySelector('.tens')
-        .classList.remove('error-highlight','correct-highlight');
-
-    document.querySelector('.ones')
-        .classList.remove('error-highlight','correct-highlight');
+    document.querySelectorAll('.column').forEach(c=>{
+        c.classList.remove('error-highlight','correct-highlight');
+    });
 }
 
-/* CHECK */
-
+/* Check */
 function checkAnswer(){
 
     const feedback=document.getElementById('feedback');
-
     const colH=document.querySelector('.hundreds');
     const colT=document.querySelector('.tens');
     const colO=document.querySelector('.ones');
@@ -472,12 +321,9 @@ function checkAnswer(){
     colT.classList.remove('error-highlight','correct-highlight');
     colO.classList.remove('error-highlight','correct-highlight');
 
-    if(currentH===targetH &&
-       currentT===targetT &&
-       currentO===targetO){
+    if(currentH===targetH && currentT===targetT && currentO===targetO){
 
-        feedback.innerText=
-        "🎉 Excellent! You built the number correctly!";
+        feedback.innerText="🎉 Excellent!";
 
         colH.classList.add('correct-highlight');
         colT.classList.add('correct-highlight');
@@ -487,58 +333,30 @@ function checkAnswer(){
 
     } else {
 
-        let message="Check your work: ";
+        let msg="Check your work: ";
 
         if(currentH!==targetH){
-
             colH.classList.add('error-highlight');
-
-            message+=currentH>targetH
-                ? "Too many hundreds. "
-                : "Add more hundreds. ";
-
-        } else {
-
-            colH.classList.add('correct-highlight');
-        }
+            msg+=currentH>targetH?"Too many hundreds. ":"Add more hundreds. ";
+        } else colH.classList.add('correct-highlight');
 
         if(currentT!==targetT){
-
             colT.classList.add('error-highlight');
-
-            message+=currentT>targetT
-                ? "Too many tens. "
-                : "Add more tens. ";
-
-        } else {
-
-            colT.classList.add('correct-highlight');
-        }
+            msg+=currentT>targetT?"Too many tens. ":"Add more tens. ";
+        } else colT.classList.add('correct-highlight');
 
         if(currentO!==targetO){
-
             colO.classList.add('error-highlight');
+            msg+=currentO>targetO?"Too many ones. ":"Add more ones. ";
+        } else colO.classList.add('correct-highlight');
 
-            message+=currentO>targetO
-                ? "Too many ones. "
-                : "Add more ones. ";
-
-        } else {
-
-            colO.classList.add('correct-highlight');
-        }
-
-        feedback.innerText=message;
+        feedback.innerText=msg;
     }
 }
 
-/* RETURN */
-
+/* Return */
 function goToNextSlide(){
-
-    alert(
-    "Close this tab or press the back button to return to Nearpod, then click NEXT."
-    );
+    alert("Close this tab and return to Nearpod, then click NEXT.");
 }
 
 window.onload=generateNumber;
