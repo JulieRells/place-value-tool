@@ -13,47 +13,117 @@ body {
     margin: 0;
     padding: 15px;
 }
+
 .container {
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
     background: white;
     padding: 25px;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
+
 .target-box {
     font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 10px;
 }
+
+/* Grid Layout */
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin: 20px 0;
 }
+
+/* Columns */
 .column {
-    padding: 15px;
     border: 2px dashed #ccc;
-    min-height: 200px;
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 240px;
+    transition: 0.2s;
 }
+
 .hundreds { background: #fefcbf; }
 .tens { background: #feebc8; }
 .ones { background: #c6f6d5; }
-.flat, .rod, .unit {
-    margin: 5px;
-    cursor: grab;
-}
-.flat { width: 40px; height: 40px; background: gold; }
-.rod { width: 10px; height: 50px; background: orange; }
-.unit { width: 10px; height: 10px; background: green; }
 
+.label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Drop Zones (organized layout) */
+.drop-zone {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 6px;
+    min-height: 170px;
+}
+
+/* ===================== */
+/* HIGH DETAIL BASE-10 BLOCKS */
+/* ===================== */
+
+/* Hundreds (clear 10x10 grid) */
+.flat {
+    width: 55px !important;
+    height: 55px !important;
+    background-color: #ecc94b !important;
+    border: 2px solid #b7791f !important;
+    border-radius: 4px !important;
+
+    background-image:
+        linear-gradient(to right, rgba(0,0,0,0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.25) 1px, transparent 1px) !important;
+
+    background-size: 5px 5px !important;
+}
+
+/* Tens rods (clearly segmented) */
+.rod {
+    width: 16px !important;
+    height: 65px !important;
+    background-color: #ed8936 !important;
+    border: 2px solid #c05621 !important;
+    border-radius: 3px !important;
+
+    background-image:
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 1px, transparent 1px) !important;
+
+    background-size: 100% 6px !important;
+}
+
+/* Ones */
+.unit {
+    width: 16px !important;
+    height: 16px !important;
+    background-color: #48bb78 !important;
+    border: 2px solid #2f855a !important;
+    border-radius: 3px !important;
+}
+
+/* Feedback highlights */
+.error-highlight {
+    outline: 4px solid #e53e3e;
+}
+
+.correct-highlight {
+    outline: 4px solid #38a169;
+}
+
+/* Buttons */
 button {
     padding: 10px 20px;
-    margin: 5px;
+    margin: 6px;
     font-weight: bold;
     cursor: pointer;
 }
+
 .feedback {
     margin-top: 15px;
     font-weight: bold;
@@ -66,6 +136,7 @@ button {
 <div class="container">
 
 <h2>Place Value Playground</h2>
+
 <p id="modeIndicator"></p>
 <p><strong>Problem <span id="problemNumber">1</span> of 10</strong></p>
 
@@ -80,9 +151,22 @@ button {
 
 <!-- Columns -->
 <div class="grid">
-    <div class="column hundreds" ondragover="allowDrop(event)" ondrop="drop(event,'hundreds')"></div>
-    <div class="column tens" ondragover="allowDrop(event)" ondrop="drop(event,'tens')"></div>
-    <div class="column ones" ondragover="allowDrop(event)" ondrop="drop(event,'ones')"></div>
+
+    <div class="column hundreds" ondragover="allowDrop(event)" ondrop="drop(event,'hundreds')">
+        <div class="label">Hundreds</div>
+        <div class="drop-zone" id="zoneHundreds"></div>
+    </div>
+
+    <div class="column tens" ondragover="allowDrop(event)" ondrop="drop(event,'tens')">
+        <div class="label">Tens</div>
+        <div class="drop-zone" id="zoneTens"></div>
+    </div>
+
+    <div class="column ones" ondragover="allowDrop(event)" ondrop="drop(event,'ones')">
+        <div class="label">Ones</div>
+        <div class="drop-zone" id="zoneOnes"></div>
+    </div>
+
 </div>
 
 <button onclick="checkAnswer()">Check</button>
@@ -107,7 +191,7 @@ let currentH=0, currentT=0, currentO=0;
 let problemCount = 0;
 const maxProblems = 10;
 
-// GENERATE NUMBER
+// Generate Number
 function generateNumber(){
 
     if(problemCount >= maxProblems){
@@ -133,16 +217,15 @@ function generateNumber(){
     updateMode();
 }
 
-// MODE SWITCH
+// Mode
 function updateMode(){
-    let text = problemCount <=5 ?
-    "Guided Mode: Place blocks in the correct column" :
-    "Challenge Mode: Blocks can go anywhere!";
-
-    document.getElementById('modeIndicator').innerText = text;
+    document.getElementById('modeIndicator').innerText =
+        problemCount <=5
+        ? "Guided Mode: Place blocks in the correct column"
+        : "Challenge Mode: Blocks can go anywhere!";
 }
 
-// DRAG
+// Drag
 function drag(ev,type){
     ev.dataTransfer.setData("text",type);
 }
@@ -151,7 +234,7 @@ function allowDrop(ev){
     ev.preventDefault();
 }
 
-// DROP
+// Drop
 function drop(ev,column){
     ev.preventDefault();
 
@@ -164,52 +247,106 @@ function drop(ev,column){
         if(column==="ones" && type!=="one") return;
     }
 
-    addBlock(column,type);
+    addBlock(column);
 }
 
-// ADD BLOCK
-function addBlock(column,type){
+// Add Block
+function addBlock(column){
+
+    let div = document.createElement("div");
 
     if(column==="hundreds"){
         currentH++;
-        evAppend("hundreds","flat");
+        div.className="flat";
+        document.getElementById("zoneHundreds").appendChild(div);
     }
+
     if(column==="tens"){
         currentT++;
-        evAppend("tens","rod");
+        div.className="rod";
+        document.getElementById("zoneTens").appendChild(div);
     }
+
     if(column==="ones"){
         currentO++;
-        evAppend("ones","unit");
+        div.className="unit";
+        document.getElementById("zoneOnes").appendChild(div);
     }
+
+    div.onclick = function(){
+        this.remove();
+        if(column==="hundreds") currentH--;
+        if(column==="tens") currentT--;
+        if(column==="ones") currentO--;
+    };
 }
 
-// APPEND ELEMENT
-function evAppend(col,className){
-    let div = document.createElement("div");
-    div.className = className;
-    div.onclick = function(){ this.remove(); };
-    document.querySelector("."+col).appendChild(div);
-}
-
-// CLEAR
+// Clear
 function clearWorkspace(){
     currentH=0; currentT=0; currentO=0;
-    document.querySelectorAll(".column").forEach(c=>c.innerHTML="");
+
+    document.getElementById("zoneHundreds").innerHTML="";
+    document.getElementById("zoneTens").innerHTML="";
+    document.getElementById("zoneOnes").innerHTML="";
+
+    document.querySelector('.hundreds').classList.remove('error-highlight','correct-highlight');
+    document.querySelector('.tens').classList.remove('error-highlight','correct-highlight');
+    document.querySelector('.ones').classList.remove('error-highlight','correct-highlight');
 }
 
-// CHECK
+// Check Answer
 function checkAnswer(){
 
+    const feedback = document.getElementById('feedback');
+
+    const colH = document.querySelector('.hundreds');
+    const colT = document.querySelector('.tens');
+    const colO = document.querySelector('.ones');
+
+    colH.classList.remove('error-highlight','correct-highlight');
+    colT.classList.remove('error-highlight','correct-highlight');
+    colO.classList.remove('error-highlight','correct-highlight');
+
     if(currentH===targetH && currentT===targetT && currentO===targetO){
-        document.getElementById('feedback').innerText="✅ Correct!";
-        setTimeout(generateNumber,1000);
+
+        feedback.innerText = "🎉 Excellent! You built the number correctly!";
+
+        colH.classList.add('correct-highlight');
+        colT.classList.add('correct-highlight');
+        colO.classList.add('correct-highlight');
+
+        setTimeout(generateNumber,1200);
+
     } else {
-        document.getElementById('feedback').innerText="❌ Try again!";
+
+        let message = "Check your work: ";
+
+        if(currentH !== targetH){
+            colH.classList.add('error-highlight');
+            message += currentH > targetH ? "Too many hundreds. " : "Add more hundreds. ";
+        } else {
+            colH.classList.add('correct-highlight');
+        }
+
+        if(currentT !== targetT){
+            colT.classList.add('error-highlight');
+            message += currentT > targetT ? "Too many tens. " : "Add more tens. ";
+        } else {
+            colT.classList.add('correct-highlight');
+        }
+
+        if(currentO !== targetO){
+            colO.classList.add('error-highlight');
+            message += currentO > targetO ? "Too many ones. " : "Add more ones. ";
+        } else {
+            colO.classList.add('correct-highlight');
+        }
+
+        feedback.innerText = message;
     }
 }
 
-// RETURN TO NEARPOD (BEST METHOD)
+// Return to Nearpod
 function goToNextSlide(){
     alert("Close this tab or press the back button to return to Nearpod, then click NEXT.");
 }
