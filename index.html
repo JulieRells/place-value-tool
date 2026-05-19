@@ -29,7 +29,27 @@ body {
     margin-bottom: 10px;
 }
 
-/* Grid Layout */
+/* Supply Dock */
+.supply-dock {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #edf2f7;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+.dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+}
+
+/* Grid */
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -43,7 +63,6 @@ body {
     border-radius: 12px;
     padding: 10px;
     min-height: 240px;
-    transition: 0.2s;
 }
 
 .hundreds { background: #fefcbf; }
@@ -55,7 +74,7 @@ body {
     margin-bottom: 5px;
 }
 
-/* Drop Zones (organized layout) */
+/* Drop zones */
 .drop-zone {
     display: flex;
     flex-wrap: wrap;
@@ -65,49 +84,46 @@ body {
     min-height: 170px;
 }
 
-/* ===================== */
-/* HIGH DETAIL BASE-10 BLOCKS */
-/* ===================== */
-
-/* Hundreds (clear 10x10 grid) */
+/* Base-10 Blocks */
 .flat {
-    width: 55px !important;
-    height: 55px !important;
-    background-color: #ecc94b !important;
-    border: 2px solid #b7791f !important;
-    border-radius: 4px !important;
+    width: 55px;
+    height: 55px;
+    background-color: #ecc94b;
+    border: 2px solid #b7791f;
+    border-radius: 4px;
 
     background-image:
         linear-gradient(to right, rgba(0,0,0,0.25) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0,0,0,0.25) 1px, transparent 1px) !important;
+        linear-gradient(to bottom, rgba(0,0,0,0.25) 1px, transparent 1px);
 
-    background-size: 5px 5px !important;
+    background-size: 5px 5px;
+    cursor: grab;
 }
 
-/* Tens rods (clearly segmented) */
 .rod {
-    width: 16px !important;
-    height: 65px !important;
-    background-color: #ed8936 !important;
-    border: 2px solid #c05621 !important;
-    border-radius: 3px !important;
+    width: 16px;
+    height: 65px;
+    background-color: #ed8936;
+    border: 2px solid #c05621;
+    border-radius: 3px;
 
     background-image:
-        linear-gradient(to bottom, rgba(0,0,0,0.35) 1px, transparent 1px) !important;
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 1px, transparent 1px);
 
-    background-size: 100% 6px !important;
+    background-size: 100% 6px;
+    cursor: grab;
 }
 
-/* Ones */
 .unit {
-    width: 16px !important;
-    height: 16px !important;
-    background-color: #48bb78 !important;
-    border: 2px solid #2f855a !important;
-    border-radius: 3px !important;
+    width: 16px;
+    height: 16px;
+    background-color: #48bb78;
+    border: 2px solid #2f855a;
+    border-radius: 3px;
+    cursor: grab;
 }
 
-/* Feedback highlights */
+/* Feedback */
 .error-highlight {
     outline: 4px solid #e53e3e;
 }
@@ -116,7 +132,6 @@ body {
     outline: 4px solid #38a169;
 }
 
-/* Buttons */
 button {
     padding: 10px 20px;
     margin: 6px;
@@ -142,14 +157,27 @@ button {
 
 <div class="target-box" id="targetNumber">---</div>
 
-<!-- Supply -->
-<div>
-    <div class="flat" draggable="true" ondragstart="drag(event,'hundred')"></div>
-    <div class="rod" draggable="true" ondragstart="drag(event,'ten')"></div>
-    <div class="unit" draggable="true" ondragstart="drag(event,'one')"></div>
+<!-- SUPPLY DOCK -->
+<div class="supply-dock">
+
+    <div class="dock-item">
+        <div class="flat" draggable="true" ondragstart="drag(event,'hundred')"></div>
+        <span>Hundreds</span>
+    </div>
+
+    <div class="dock-item">
+        <div class="rod" draggable="true" ondragstart="drag(event,'ten')"></div>
+        <span>Tens</span>
+    </div>
+
+    <div class="dock-item">
+        <div class="unit" draggable="true" ondragstart="drag(event,'one')"></div>
+        <span>Ones</span>
+    </div>
+
 </div>
 
-<!-- Columns -->
+<!-- COLUMNS -->
 <div class="grid">
 
     <div class="column hundreds" ondragover="allowDrop(event)" ondrop="drop(event,'hundreds')">
@@ -191,7 +219,7 @@ let currentH=0, currentT=0, currentO=0;
 let problemCount = 0;
 const maxProblems = 10;
 
-// Generate Number
+/* Generate */
 function generateNumber(){
 
     if(problemCount >= maxProblems){
@@ -217,7 +245,7 @@ function generateNumber(){
     updateMode();
 }
 
-// Mode
+/* Mode */
 function updateMode(){
     document.getElementById('modeIndicator').innerText =
         problemCount <=5
@@ -225,7 +253,7 @@ function updateMode(){
         : "Challenge Mode: Blocks can go anywhere!";
 }
 
-// Drag
+/* Drag */
 function drag(ev,type){
     ev.dataTransfer.setData("text",type);
 }
@@ -234,7 +262,7 @@ function allowDrop(ev){
     ev.preventDefault();
 }
 
-// Drop
+/* Drop */
 function drop(ev,column){
     ev.preventDefault();
 
@@ -250,7 +278,7 @@ function drop(ev,column){
     addBlock(column);
 }
 
-// Add Block
+/* Add block */
 function addBlock(column){
 
     let div = document.createElement("div");
@@ -281,7 +309,7 @@ function addBlock(column){
     };
 }
 
-// Clear
+/* Clear */
 function clearWorkspace(){
     currentH=0; currentT=0; currentO=0;
 
@@ -294,7 +322,7 @@ function clearWorkspace(){
     document.querySelector('.ones').classList.remove('error-highlight','correct-highlight');
 }
 
-// Check Answer
+/* Check */
 function checkAnswer(){
 
     const feedback = document.getElementById('feedback');
@@ -346,7 +374,7 @@ function checkAnswer(){
     }
 }
 
-// Return to Nearpod
+/* Return */
 function goToNextSlide(){
     alert("Close this tab or press the back button to return to Nearpod, then click NEXT.");
 }
