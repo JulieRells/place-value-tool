@@ -75,6 +75,16 @@ button {
   margin-top: 10px;
   font-size: 16px;
 }
+
+/* NEW: Nearpod return bar */
+#returnBar {
+  margin-top: 20px;
+  padding: 12px;
+  background: #fff3cd;
+  border-top: 2px solid #ffc107;
+  font-size: 16px;
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -100,6 +110,11 @@ button {
   <button onclick="breakTen()">Break 1 Ten</button>
   <button onclick="tryAgain()">Try Again</button>
   <button onclick="reset()">Reset</button>
+</div>
+
+<!-- NEW: Clear student instruction -->
+<div id="returnBar">
+  When you are done, click the <strong>Nearpod tab</strong> or press the <strong>back button</strong> to return to your lesson.
 </div>
 
 <script>
